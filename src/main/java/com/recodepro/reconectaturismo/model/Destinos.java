@@ -1,29 +1,41 @@
 package com.recodepro.reconectaturismo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Destinos {
     @Id
-    private Long id_destino;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable=false)
     private double valor;
+
+    @Column(nullable=false)
     private String pais;
+
+    @Column(nullable=false)
     private String cidade;
 
+    @OneToMany(mappedBy = "destino")
+    private Set<Passagens> passagem = new HashSet<>();
+
     public Destinos() {}
-    public Destinos(Long id_destino, double valor, String pais, String cidade) {
-        this.id_destino = id_destino;
+    public Destinos(Long id, double valor, String pais, String cidade) {
+        this.id = id;
         this.valor = valor;
         this.pais = pais;
         this.cidade = cidade;
     }
 
-    public Long getId_destino() {
-        return id_destino;
+    public Long getId() {
+        return id;
     }
-    public void setId_destino(Long id_destino) {
-        this.id_destino = id_destino;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public double getValor() {

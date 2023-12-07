@@ -1,31 +1,37 @@
 package com.recodepro.reconectaturismo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
 public class Passagens {
     @Id
-    private Long id_passagem;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "usuario")
     private Usuarios usuario;
 
     @ManyToOne
+    @JoinColumn(name = "destino")
     private Destinos destino;
 
+    @Column(nullable=false)
     private String local_partida;
+
+    @Column(nullable=false)
     private LocalDate data_partida;
+
+    @Column(nullable=false)
     private LocalDate data_retorno;
 
     public Passagens() {}
 
-    public Passagens(Long id_passagem, Usuarios usuario, Destinos destino, String local_partida, LocalDate data_partida, LocalDate data_retorno) {
-        this.id_passagem = id_passagem;
+    public Passagens(Long id, Usuarios usuario, Destinos destino, String local_partida, LocalDate data_partida, LocalDate data_retorno) {
+        this.id = id;
         this.usuario = usuario;
         this.destino = destino;
         this.local_partida = local_partida;
@@ -33,11 +39,11 @@ public class Passagens {
         this.data_retorno = data_retorno;
     }
 
-    public Long getId_passagem() {
-        return id_passagem;
+    public Long getId() {
+        return id;
     }
-    public void setId_passagem(Long id_passagem) {
-        this.id_passagem = id_passagem;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Usuarios getUsuario() {

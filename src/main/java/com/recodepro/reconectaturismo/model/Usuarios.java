@@ -1,24 +1,49 @@
 package com.recodepro.reconectaturismo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Usuarios {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable=false)
     private String nome_completo;
+
+    @Column(nullable=false)
     private String CPF;
+
+    @Column(nullable=false)
     private String RG;
+
+    @Column(nullable=false)
     private LocalDate data_nascimento;
+
+    @Column(nullable=false)
     private String email;
+
+    @Column(nullable=false)
     private String rua;
+
+    @Column(nullable=false)
     private String numero;
+
+    @Column(nullable=false)
     private String bairro;
+
+    @Column(nullable=false)
     private String cidade;
+
+    @Column(nullable=false)
     private String UF;
+
+    @OneToMany(mappedBy = "usuario")
+    private Set<Passagens> passagem = new HashSet<>();
 
     public Usuarios() {
     }
@@ -112,5 +137,12 @@ public class Usuarios {
     }
     public void setUF(String UF) {
         this.UF = UF;
+    }
+
+    public Set<Passagens> getPassagem() {
+        return passagem;
+    }
+    public void setPassagem(Set<Passagens> passagem) {
+        this.passagem = passagem;
     }
 }
