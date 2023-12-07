@@ -1,12 +1,12 @@
 package com.recodepro.reconectaturismo.controller;
 
-import com.recodepro.reconectaturismo.model.Destinos;
-import com.recodepro.reconectaturismo.model.Passagens;
 import com.recodepro.reconectaturismo.model.Usuarios;
+import com.recodepro.reconectaturismo.model.UsuariosPassagensDTO;
 import com.recodepro.reconectaturismo.services.DestinosService;
 import com.recodepro.reconectaturismo.services.PassagensService;
 import com.recodepro.reconectaturismo.services.UsuariosService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/usuarios")
 public class UsuariosController {
 
+    //Usuarios
     @Autowired
     private UsuariosService us;
 
@@ -65,16 +66,12 @@ public class UsuariosController {
     @Autowired
     private DestinosService ds;
 
+    @PostMapping("/comprar-passagem")
+    public ResponseEntity<String> comprarPassagem (@RequestBody UsuariosPassagensDTO upDTO){
+        us.comprarPassagem(upDTO.getId_usuario(),upDTO.getId_destino(), upDTO.getLocal_partida(),
+                upDTO.getData_partida(),upDTO.getData_retorno());
 
-    @PostMapping("/comprar-passagem/{id_usuario}")
-    public Passagens comprarPassagem(@RequestBody Passagens passagem, @PathVariable Long id_usuario, Destinos destino){
-        Usuarios usuario = us.getUsuarioById(id_usuario);
-        passagem.setUsuario(usuario);
-
-        destino = ds.getDestinoById(destino.getId());
-        passagem.setDestino(destino);
-
-        return ps.savePassagem(passagem);
+        return new ResponseEntity<>("Passagem comprada!", HttpStatus.CREATED);
     }
 
     @GetMapping("/listar-passagens/{id_usuario}")

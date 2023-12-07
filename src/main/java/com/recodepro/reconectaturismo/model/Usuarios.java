@@ -1,5 +1,6 @@
 package com.recodepro.reconectaturismo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -42,7 +43,8 @@ public class Usuarios {
     @Column(nullable=false)
     private String UF;
 
-    @OneToMany(mappedBy = "usuario")
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER)
     private Set<Passagens> passagem = new HashSet<>();
 
     public Usuarios() {
