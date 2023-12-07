@@ -14,6 +14,8 @@ import java.util.List;
 public interface PassagensRepository extends JpaRepository<Passagens,Long> {
     @Transactional
     @Modifying
-    @Query(nativeQuery = true, value = "SELECT * FROM PASSAGENS")
+    @Query(nativeQuery = true, value = "select usuarios.nome_completo, destinos.cidade, passagens.local_partida, " +
+            "passagens.data_partida, passagens.data_retorno from passagens, destinos, " +
+            "usuarios where usuarios.id=passagens.usuario and destinos.id=passagens.destino;")
     List<Object[]> getAllPassagens();
 }
