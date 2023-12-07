@@ -20,7 +20,7 @@ public class Destinos {
     @Column(nullable=false)
     private String cidade;
 
-    @OneToMany(mappedBy = "destino")
+    @OneToMany(mappedBy = "destino", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Passagens> passagem = new HashSet<>();
 
     public Destinos() {}

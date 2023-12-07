@@ -44,7 +44,7 @@ public class Usuarios {
     private String UF;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Passagens> passagem = new HashSet<>();
 
     public Usuarios() {
