@@ -9,5 +9,5 @@ public interface DestinosService {
     Destinos getDestinoById(Long id);
     Destinos saveDestino(Destinos destino);
     Destinos updateDestino(Long id, Destinos updateDestino);
-    void deleteById(Long id);
+    Destinos deleteById(Long id);
 }

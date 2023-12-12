@@ -1,5 +1,7 @@
 package com.recodepro.reconectaturismo.servicesimpl;
 
+import com.recodepro.reconectaturismo.exception.DestinoNotFoundException;
+import com.recodepro.reconectaturismo.exception.UsuarioNotFoundException;
 import com.recodepro.reconectaturismo.model.Destinos;
 import com.recodepro.reconectaturismo.model.Passagens;
 import com.recodepro.reconectaturismo.model.Usuarios;
@@ -9,7 +11,6 @@ import com.recodepro.reconectaturismo.repository.UsuariosRepository;
 import com.recodepro.reconectaturismo.services.UsuariosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,8 +33,7 @@ public class UsuariosServiceImpl implements UsuariosService {
 
     @Override
     public Usuarios getUsuarioById(Long id) {
-        return ur.findById(id).orElseThrow(() -> new RuntimeException("ID: " + id + "Not Found"));
-
+        return ur.findById(id).orElseThrow(() -> new UsuarioNotFoundException());
     }
 
     @Override
@@ -43,7 +43,7 @@ public class UsuariosServiceImpl implements UsuariosService {
 
     @Override
     public Usuarios updateUsuario(Long id, Usuarios updateUsuario) {
-        Usuarios usuarioExists = ur.findById(id).orElseThrow();
+        Usuarios usuarioExists = ur.findById(id).orElseThrow(() -> new UsuarioNotFoundException());
         usuarioExists.setNome_completo(updateUsuario.getNome_completo());
         usuarioExists.setCPF(updateUsuario.getCPF());
         usuarioExists.setRG(updateUsuario.getRG());
@@ -59,16 +59,17 @@ public class UsuariosServiceImpl implements UsuariosService {
     }
 
     @Override
-    public void deleteById(Long id) {
-        ur.deleteById(id);
+    public Usuarios deleteById(Long id) {
+        Usuarios usuario = ur.findById(id).orElseThrow(() -> new UsuarioNotFoundException());
+        ur.deleteById(usuario.getId());
+        return usuario;
     }
 
     @Override
-    public void comprarPassagem(Long id_usuario, Long id_destino, String local_partida, LocalDate data_partida,
-                                LocalDate data_retorno) {
-        Usuarios usuario =
-                ur.findById(id_usuario).orElseThrow(() -> new RuntimeException("ID: " + id_usuario + "Not Found"));
-        Destinos destino = dr.findById(id_destino).orElseThrow(() -> new RuntimeException("ID: " + id_destino + "Not Found"));
+    public Passagens comprarPassagem(Long id_usuario, Long id_destino, String local_partida, LocalDate data_partida,
+                                     LocalDate data_retorno) {
+        Usuarios usuario = ur.findById(id_usuario).orElseThrow(() -> new UsuarioNotFoundException());
+        Destinos destino = dr.findById(id_destino).orElseThrow(() -> new DestinoNotFoundException());
 
         Passagens passagem = new Passagens();
         passagem.setUsuario(usuario);
@@ -77,13 +78,15 @@ public class UsuariosServiceImpl implements UsuariosService {
         passagem.setData_partida(data_partida);
         passagem.setData_retorno(data_retorno);
 
-        pr.save(passagem);
+
+        return pr.save(passagem);
 
     }
 
     @Override
     public List<Object[]> getAllPassagensUsuario(Long id_usuario) {
-        List<Object[]> passagens = ur.getAllPassagensUsuario(id_usuario);
+        Usuarios usuario = ur.findById(id_usuario).orElseThrow(() -> new UsuarioNotFoundException());
+        List<Object[]> passagens = ur.getAllPassagensUsuario(usuario.getId());
 
         return passagens;
     }

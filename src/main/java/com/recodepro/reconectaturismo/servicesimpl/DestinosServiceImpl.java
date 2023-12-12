@@ -1,5 +1,6 @@
 package com.recodepro.reconectaturismo.servicesimpl;
 
+import com.recodepro.reconectaturismo.exception.DestinoNotFoundException;
 import com.recodepro.reconectaturismo.model.Destinos;
 import com.recodepro.reconectaturismo.repository.DestinosRepository;
 import com.recodepro.reconectaturismo.services.DestinosService;
@@ -21,7 +22,7 @@ public class DestinosServiceImpl implements DestinosService {
 
     @Override
     public Destinos getDestinoById(Long id) {
-        return dr.findById(id).orElseThrow(() -> new RuntimeException("ID: "+id+"Not Found"));
+        return dr.findById(id).orElseThrow(() -> new DestinoNotFoundException());
     }
 
     @Override
@@ -31,7 +32,7 @@ public class DestinosServiceImpl implements DestinosService {
 
     @Override
     public Destinos updateDestino(Long id, Destinos updateDestino) {
-        Destinos destinoExists=dr.findById(id).orElseThrow();
+        Destinos destinoExists=dr.findById(id).orElseThrow(() -> new DestinoNotFoundException());
         destinoExists.setCidade(updateDestino.getCidade());
         destinoExists.setPais(updateDestino.getPais());
         destinoExists.setValor(updateDestino.getValor());
@@ -40,7 +41,9 @@ public class DestinosServiceImpl implements DestinosService {
     }
 
     @Override
-    public void deleteById(Long id) {
-        dr.deleteById(id);
+    public Destinos deleteById(Long id) {
+        Destinos destino = dr.findById(id).orElseThrow(() -> new DestinoNotFoundException());
+        dr.deleteById(destino.getId());
+        return destino;
     }
 }

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface PassagensService {
     List<Object[]> getAllPassagens();
-    void deleteById(Long id);
+    Passagens deleteById(Long id);
 }

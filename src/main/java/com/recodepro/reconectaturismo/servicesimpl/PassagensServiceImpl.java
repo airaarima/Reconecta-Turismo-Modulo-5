@@ -1,5 +1,8 @@
 package com.recodepro.reconectaturismo.servicesimpl;
 
+import com.recodepro.reconectaturismo.exception.PassagemNotFoundException;
+import com.recodepro.reconectaturismo.exception.UsuarioNotFoundException;
+import com.recodepro.reconectaturismo.model.Passagens;
 import com.recodepro.reconectaturismo.repository.PassagensRepository;
 import com.recodepro.reconectaturismo.services.PassagensService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +22,10 @@ public class PassagensServiceImpl implements PassagensService {
     }
 
     @Override
-    public void deleteById(Long id) {
-        pr.deleteById(id);
+    public Passagens deleteById(Long id) {
+        Passagens passagem = pr.findById(id).orElseThrow(() -> new PassagemNotFoundException());
+        pr.deleteById(passagem.getId());
+        return passagem;
     }
 
 
